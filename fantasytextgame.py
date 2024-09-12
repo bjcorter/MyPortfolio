@@ -1,4 +1,4 @@
-"""Medieval text based game."""
+"""Medieval text based game by Ben Corter"""
 import random
 WHITE_BOX: str = "\U00002B1C"
 
