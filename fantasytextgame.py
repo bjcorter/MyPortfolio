@@ -91,7 +91,8 @@ def riddle(number: int) -> int:
                 player = f"{player}, King of Buffoons and Imbiciles"
                 points = 0
                 num = 0
-    return points + num
+        points += num    
+    return points
  
                
 def knight() -> None:
