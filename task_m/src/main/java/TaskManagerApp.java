@@ -105,7 +105,7 @@ public class TaskManagerApp extends Application {
         root.setCenter(taskListsLayout);
         root.setRight(inputLayout);
 
-        Scene scene = new Scene(root, 800, 400);
+        Scene scene = new Scene(root, 1600, 800);
         primaryStage.setTitle("Task Manager");
         primaryStage.setScene(scene);
         primaryStage.show();
