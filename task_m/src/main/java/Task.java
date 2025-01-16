@@ -5,8 +5,10 @@ public class Task{
     private String title;
     private LocalDate dueDate;
     private boolean isDone;
+
+    public Task(){}
     
-    public Task(String title, LocalDate dueDate, boolean isDone){
+    public Task(String title, LocalDate dueDate){
         this.title = title;
         this.dueDate = dueDate;
         this.isDone = false;
