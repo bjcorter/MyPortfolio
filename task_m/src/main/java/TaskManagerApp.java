@@ -7,10 +7,12 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.time.LocalDate;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TaskManagerApp extends Application {
@@ -85,13 +87,14 @@ public class TaskManagerApp extends Application {
             Task selectedTask = currentTaskListView.getSelectionModel().getSelectedItem();
             if (selectedTask != null) {
                 currentTasks.remove(selectedTask);
-                selectedTask.toggleIsDone();
+                selectedTask.setDone(true);// Mark as completed
                 completedTasks.add(selectedTask);
-                saveTasksToFile(taskFile);
+                saveTasksToFile(taskFile); // Save tasks after updating
             } else {
                 showAlert("Error", "No task selected!");
             }
         });
+        
 
         VBox inputLayout = new VBox(5, titleField, dueDatePicker, addButton, deleteButton, completeButton);
         inputLayout.setPrefWidth(300);
@@ -121,39 +124,48 @@ public class TaskManagerApp extends Application {
 
     private void saveTasksToFile(String filename) {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule()); // Register module
+        mapper.registerModule(new JavaTimeModule()); // Ensure LocalDate is supported
+    
         try {
+            // Combine currentTasks and completedTasks into a single list
             List<Task> allTasks = new ArrayList<>();
             allTasks.addAll(currentTasks);
             allTasks.addAll(completedTasks);
     
+            // Write the combined list to the file
             mapper.writeValue(new File(filename), allTasks);
-            System.out.println("Tasks saved to file: " + filename);
         } catch (IOException e) {
             showAlert("Error", "Failed to save tasks to file: " + e.getMessage());
         }
     }
     
 
+    
+
     private void loadTasksFromFile(String filename) {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule()); // Register module
+        mapper.registerModule(new JavaTimeModule()); // Ensure LocalDate is supported
+    
         try {
             File file = new File(filename);
             if (file.exists()) {
-                Task[] tasks = mapper.readValue(file, Task[].class);
-                for (Task task : tasks) {
-                    if (task.checkIfDone()) {
+                // Read all tasks from the file
+                List<Task> taskList = Arrays.asList(mapper.readValue(file, Task[].class));
+    
+                // Distribute tasks to the appropriate lists
+                for (Task task : taskList) {
+                    if (task.isDone()) { // If the task is completed
                         completedTasks.add(task);
-                    } else {
+                    } else { // If the task is not completed
                         currentTasks.add(task);
                     }
                 }
-                System.out.println("Tasks loaded from file: " + filename);
             }
         } catch (IOException e) {
             showAlert("Error", "Failed to load tasks from file: " + e.getMessage());
         }
     }
+    
+
     
 }

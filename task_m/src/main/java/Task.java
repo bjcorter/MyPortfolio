@@ -1,45 +1,54 @@
 import java.time.LocalDate;
 
-public class Task{
-
+public class Task {
     private String title;
     private LocalDate dueDate;
-    private boolean isDone;
+    private boolean isDone; // Completion status
 
-    public Task(){}
-    
-    public Task(String title, LocalDate dueDate){
+    public Task(String title, LocalDate dueDate) {
         this.title = title;
         this.dueDate = dueDate;
-        this.isDone = false;
+        this.isDone = false; // Default to not completed
     }
 
-    public String getTitle(){
+    public Task() {
+        // Default constructor for Jackson
+    }
+    
+
+    // Getters and setters
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(String newTitle){
-        this.title = newTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public LocalDate getDueDate(){
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDate newDueDate){
-        this.dueDate = newDueDate;
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public boolean checkIfDone(){
+    public boolean isDone() {
         return isDone;
     }
 
-    public void toggleIsDone(){
-        this.isDone = !isDone;
+    public void setDone(boolean done) {
+        isDone = done;
     }
 
-    public String toString(){
-        return "Task - " + title + "Due date - " + dueDate + "Done? - " + isDone;
+    // Toggle completion status
+    public void toggleIsDone() {
+        this.isDone = !this.isDone;
     }
-    
+
+    // Override toString for better representation
+    @Override
+    public String toString() {
+        return title + (isDone ? " (Completed)" : " (Due: " + dueDate + ")");
+    }
 }
